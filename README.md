@@ -1,4 +1,4 @@
-# 3SD
+# AT-DDPM
 AT-DDPM: Restoring Faces degraded by Atmospheric Turbulence using Denoising Diffusion Probabilistic Models
 
 [Paper link](https://arxiv.org/pdf/2208.11284.pdf)
