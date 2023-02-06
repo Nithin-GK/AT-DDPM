@@ -244,11 +244,13 @@ class GaussianDiffusion:
             model_kwargs = {}
 
         B, C = x.shape[:2]
+        # C=3
         assert t.shape == (B,)
         model_output = model(x, self._scale_timesteps(t), **model_kwargs)
-
+        x=x[:,:3]
+        B, C = x.shape[:2]
         if self.model_var_type in [ModelVarType.LEARNED, ModelVarType.LEARNED_RANGE]:
-            assert model_output.shape == (B, C * 2, *x.shape[2:])
+            # assert model_output.shape == (B, C * 2, *x.shape[2:])
             model_output, model_var_values = th.split(model_output, C, dim=1)
             if self.model_var_type == ModelVarType.LEARNED:
                 model_log_variance = model_var_values
@@ -403,6 +405,8 @@ class GaussianDiffusion:
                  - 'sample': a random sample from the model.
                  - 'pred_xstart': a prediction of x_0.
         """
+
+        x=th.cat([x,model_kwargs['high_turb']],1)
         out = self.p_mean_variance(
             model,
             x,
@@ -411,6 +415,7 @@ class GaussianDiffusion:
             denoised_fn=denoised_fn,
             model_kwargs=model_kwargs,
         )
+        x=x[:,:3]
         noise = th.randn_like(x)
         nonzero_mask = (
             (t != 0).float().view(-1, *([1] * (len(x.shape) - 1)))
@@ -720,9 +725,11 @@ class GaussianDiffusion:
         output = th.where((t == 0), decoder_nll, kl)
         return {"output": output, "pred_xstart": out["pred_xstart"]}
 
-    def training_losses(self, model, x_start, t, model_kwargs=None, noise=None):
+
+    def training_losses(self, model, model_ema, x_start, t, model_kwargs=None, noise=None):
         """
         Compute training losses for a single timestep.
+
         :param model: the model to evaluate loss on.
         :param x_start: the [N x C x ...] tensor of inputs.
         :param t: a batch of timestep indices.
@@ -736,9 +743,26 @@ class GaussianDiffusion:
             model_kwargs = {}
         if noise is None:
             noise = th.randn_like(x_start)
+        x_disto_start =  model_kwargs["high_turb"]
         x_t = self.q_sample(x_start, t, noise=noise)
+        model_inp = th.cat([x_t,x_disto_start],1)
+        model_output = model(model_inp, self._scale_timesteps(t), **model_kwargs)
+        with th.no_grad():
+            x_SR_start =  model_kwargs["low_turb"]
+            model_inp_SR = th.cat([x_t,x_SR_start],1)
+            model_output_SR = model_ema(model_inp_SR, self._scale_timesteps(t), **model_kwargs)
 
         terms = {}
+
+        def process_xstart(x):
+                return x.clamp(-1, 1)
+        pred_x_start = self._predict_xstart_from_eps( x_t, t, model_output[:,:3])
+        pred_x_start =process_xstart(pred_x_start)
+        # return (
+        #     _extract_into_tensor(self.sqrt_alphas_cumprod, t, x_start.shape) * x_start
+        #     + _extract_into_tensor(self.sqrt_one_minus_alphas_cumprod, t, x_start.shape)
+        #     * noise
+        # )
 
         if self.loss_type == LossType.KL or self.loss_type == LossType.RESCALED_KL:
             terms["loss"] = self._vb_terms_bpd(
@@ -752,8 +776,6 @@ class GaussianDiffusion:
             if self.loss_type == LossType.RESCALED_KL:
                 terms["loss"] *= self.num_timesteps
         elif self.loss_type == LossType.MSE or self.loss_type == LossType.RESCALED_MSE:
-            model_output = model(x_t, self._scale_timesteps(t), **model_kwargs)
-
             if self.model_var_type in [
                 ModelVarType.LEARNED,
                 ModelVarType.LEARNED_RANGE,
@@ -761,9 +783,13 @@ class GaussianDiffusion:
                 B, C = x_t.shape[:2]
                 assert model_output.shape == (B, C * 2, *x_t.shape[2:])
                 model_output, model_var_values = th.split(model_output, C, dim=1)
+                # model_output1, model_var_values = th.split(model_output1, C, dim=1)
+                model_output_turb, model_var_values_turb = th.split(model_output_SR, C, dim=1)
+
                 # Learn the variance using the variational bound, but don't let
                 # it affect our mean prediction.
                 frozen_out = th.cat([model_output.detach(), model_var_values], dim=1)
+
                 terms["vb"] = self._vb_terms_bpd(
                     model=lambda *args, r=frozen_out: r,
                     x_start=x_start,
@@ -771,6 +797,7 @@ class GaussianDiffusion:
                     t=t,
                     clip_denoised=False,
                 )["output"]
+
                 if self.loss_type == LossType.RESCALED_MSE:
                     # Divide by 1000 for equivalence with initial implementation.
                     # Without a factor of 1/1000, the VB term hurts the MSE term.
@@ -784,7 +811,9 @@ class GaussianDiffusion:
                 ModelMeanType.EPSILON: noise,
             }[self.model_mean_type]
             assert model_output.shape == target.shape == x_start.shape
-            terms["mse"] = mean_flat((target - model_output) ** 2)
+            fac = _extract_into_tensor(self.sqrt_alphas_cumprod, t, x_start.shape)
+            # print
+            terms["mse"] = mean_flat(0.9*(target - model_output) ** 2 +0.01*(model_output_turb-model_output)**2 )
             if "vb" in terms:
                 terms["loss"] = terms["mse"] + terms["vb"]
             else:

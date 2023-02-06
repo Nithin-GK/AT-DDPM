@@ -1,0 +1,248 @@
+Logging to ./experiments/log/
+creating model...
+creating data loader...
+training...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  0%|▏                                                                                                                 | 183/100000 [12:29<113:34:54,  4.10s/it]
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/wandb/sdk/lib/exit_hooks.py", line 53, in exc_handler
+    traceback.print_exception(exc_type, exc, tb)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/traceback.py", line 103, in print_exception
+    for line in TracebackException(
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/traceback.py", line 509, in __init__
+    self.stack = StackSummary.extract(
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/traceback.py", line 359, in extract
+    result.append(FrameSummary(
+KeyboardInterrupt
+Original exception was:
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 107, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 52, in main
+    TrainLoop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 151, in run_loop
+    self.run_step(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 170, in run_step
+    self.forward_backward(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 201, in forward_backward
+    losses = compute_losses()
+  File "/home/labuser/AT_DDPM/guided_diffusion/respace.py", line 96, in training_losses
+    return super().training_losses(self._wrap_model(model), *args, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 753, in training_losses
+    model_output_SR = model_ema(model_inp_SR, self._scale_timesteps(t), **model_kwargs)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1040, in forward
+    output = self._run_ddp_forward(*inputs, **kwargs)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1000, in _run_ddp_forward
+    return module_to_run(*inputs[0], **kwargs[0])
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/unet.py", line 676, in forward
+    return super().forward(x, timesteps, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/unet.py", line 658, in forward
+    h = module(h, emb)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/unet.py", line 77, in forward
+    x = layer(x)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/unet.py", line 297, in forward
+    return checkpoint(self._forward, (x,), self.parameters(), True)
+  File "/home/labuser/AT_DDPM/guided_diffusion/nn.py", line 137, in checkpoint
+    return CheckpointFunction.apply(func, len(inputs), *args)
+  File "/home/labuser/AT_DDPM/guided_diffusion/nn.py", line 149, in forward
+    output_tensors = ctx.run_function(*ctx.input_tensors)
+  File "/home/labuser/AT_DDPM/guided_diffusion/unet.py", line 302, in _forward
+    qkv = self.qkv(self.norm(x))
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/conv.py", line 313, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/conv.py", line 309, in _conv_forward
+    return F.conv1d(input, weight, bias, self.stride,
+KeyboardInterrupt

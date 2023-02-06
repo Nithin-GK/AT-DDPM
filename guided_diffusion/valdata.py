@@ -15,20 +15,19 @@ import cv2
 class ValData(data.Dataset):
     def __init__(self, data_dir, crop_size=[256,256]):
         super().__init__()
-        self.train_data_dir = data_dir
+        self.data_dir = data_dir
       
-        input_names=os.listdir(self.train_data_dir)
+        input_names=os.listdir(self.data_dir)
         self.input_names=input_names[:20]
         self.crop_size = crop_size
         # print(self.input_names)
-        self.resolution=128
+        self.resolution=256
 
     def get_images(self, index):
         input_name = self.input_names[index]
  
-        thermal_image = self.process_and_load_images(os.path.join(self.train_data_dir  ,input_name))
-
-        out_dict={'thermal': thermal_image, 'Index': input_name}
+        img_lq= self.process_and_load_images(os.path.join(self.data_dir  ,input_name))
+        out_dict={'high_turb': img_lq, 'Index': input_name}
 
         return  out_dict
 

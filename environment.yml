@@ -1,4 +1,4 @@
-name: T2V-diff
+name: AT-diff
 channels:
   - pytorch
   - nvidia

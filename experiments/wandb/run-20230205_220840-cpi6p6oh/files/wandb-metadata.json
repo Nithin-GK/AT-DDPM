@@ -1,0 +1,85 @@
+{
+    "os": "Linux-5.14.0-1054-oem-x86_64-with-glibc2.35",
+    "python": "3.9.0",
+    "heartbeatAt": "2023-02-06T03:08:40.980356",
+    "startedAt": "2023-02-06T03:08:40.568237",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/labuser/AT_DDPM/scripts/AT_train.py",
+    "codePath": "scripts/AT_train.py",
+    "git": {
+        "remote": "https://github.com/Nithin-GK/T2V-DDPM.git",
+        "commit": "af671ab55b06cd7b4c0f445b03f43c4e5116d826"
+    },
+    "email": "iamnithingk@gmail.com",
+    "root": "/home/labuser/AT_DDPM",
+    "host": "nithingk",
+    "username": "labuser",
+    "executable": "/home/labuser/anaconda3/envs/NERF_env/bin/python",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 3012.5015000000003,
+        "min": 1200.0,
+        "max": 3700.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3600.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3600.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3600.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3600.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3600.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3600.0,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3700.0
+        }
+    ],
+    "disk": {
+        "total": 911.056697845459,
+        "used": 705.3597030639648
+    },
+    "gpu": "Quadro RTX 8000",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Quadro RTX 8000",
+            "memory_total": 51539607552
+        }
+    ],
+    "memory": {
+        "total": 31.018619537353516
+    }
+}

@@ -661,7 +661,7 @@ class UNetModel(nn.Module):
         return out
 
 
-class ThermaltoVisible(UNetModel):
+class ATDDPM(UNetModel):
     """
     A UNetModel that performs super-resolution.
 
@@ -671,7 +671,7 @@ class ThermaltoVisible(UNetModel):
     def __init__(self, image_size, in_channels, *args, **kwargs):
         super().__init__(image_size, in_channels , *args, **kwargs)
 
-    def forward(self, x, timesteps, thermal=None, **kwargs):
-        x = th.cat([x, thermal], dim=1)
+    def forward(self, x, timesteps, at=None, **kwargs):
+     
         return super().forward(x, timesteps, **kwargs)
  

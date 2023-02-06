@@ -1,0 +1,19 @@
+Logging to ./experiments/log/
+creating model...
+  0%|                                                                                                                                | 0/100000 [00:01<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 105, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 52, in main
+    TrainLoop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 125, in run_loop
+    self.run_step(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 144, in run_step
+    self.forward_backward(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 174, in forward_backward
+    losses = compute_losses()
+  File "/home/labuser/AT_DDPM/guided_diffusion/respace.py", line 96, in training_losses
+    return super().training_losses(self._wrap_model(model), *args, **kwargs)
+TypeError: training_losses() missing 1 required positional argument: 't'
+creating data loader...
+training...

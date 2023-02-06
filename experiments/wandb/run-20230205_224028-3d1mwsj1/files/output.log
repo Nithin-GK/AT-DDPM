@@ -1,0 +1,20 @@
+Logging to ./experiments/log/
+creating model...
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_test.py", line 64, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_test.py", line 48, in main
+    diffusion_test(val_data,model,diffusion, './results/', run , 'test', skip_timesteps=40, iter=0)
+  File "/home/labuser/AT_DDPM/guided_diffusion/test_diff.py", line 48, in diffusion_test
+    sample = diffusion.p_sample_loop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 460, in p_sample_loop
+    for sample in self.p_sample_loop_progressive(
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 512, in p_sample_loop_progressive
+    out = self.p_sample(
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 409, in p_sample
+    out = self.p_mean_variance(
+  File "/home/labuser/AT_DDPM/guided_diffusion/respace.py", line 91, in p_mean_variance
+    return super().p_mean_variance(self._wrap_model(model), *args, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 264, in p_mean_variance
+    model_log_variance = frac * max_log + (1 - frac) * min_log
+RuntimeError: The size of tensor a (3) must match the size of tensor b (6) at non-singleton dimension 1

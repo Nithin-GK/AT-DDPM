@@ -1,45 +1,54 @@
 # 3SD
-T2V-DDPM: Thermal to Visible Face Translation using Denoising Diffusion Probabilistic Models
+AT-DDPM: Restoring Faces degraded by Atmospheric Turbulence using Denoising Diffusion Probabilistic Models
 
-[Paper link](https://arxiv.org/pdf/2209.08814.pdf)
+[Paper link](https://arxiv.org/pdf/2208.11284.pdf)
 
-Modern-day surveillance systems perform person recognition using deep learning-based face verification networks. Most state-of-the-art facial verification systems are
-trained using visible spectrum images. But, acquiring images in the visible spectrum is impractical in scenarios of low-light and nighttime conditions, and often images are captured in an alternate domain such as the thermal infrared domain. Facial verification in thermal images is often performed after retrieving the corresponding visible domain images. This is a well-established problem often known as the Thermal-to-Visible (T2V) image translation. In this paper, we propose a Denoising Diffusion Probabilistic Model (DDPM) based solution for T2V translation specifically for facial images. During training, the model learns the conditional distribution of visible facial images given their corresponding thermal image through the diffusion process. During inference, the visible domain image is obtained by starting from Gaussian noise and performing denoising repeatedly. The existing inference process for DDPMs is stochastic and time-consuming. Hence, we propose a novel inference strategy for speeding up the inference time of DDPMs, specifically for the problem of T2V image translation. We achieve the state-of-the-art results on multiple datasets. 
+Although many long-range imaging systems are designed to support extended vision applications, a natural
+obstacle to their operation is degradation due to atmospheric turbulence. Atmospheric turbulence causes significant degradation to image quality by introducing blur
+and geometric distortion. In recent years, various deep
+learning-based single image atmospheric turbulence mitigation methods, including CNN-based and GAN inversionbased, have been proposed in the literature which attempt
+to remove the distortion in the image. However, some of
+these methods are difficult to train and often fail to reconstruct facial features and produce unrealistic results especially in the case of high turbulence. Denoising Diffusion Probabilistic Models (DDPMs) have recently gained
+some traction because of their stable training process and
+their ability to generate high quality images. In this paper,
+we propose the first DDPM-based solution for the problem of atmospheric turbulence mitigation. We also propose a fast sampling technique for reducing the inference
+times for conditional DDPMs. Extensive experiments are
+conducted on synthetic and real-world data to show the
+significance of our model. 
 
 ## Prerequisites:
 1. Create a conda environment and activate using 
 ```
 conda env create -f environment.yml
-conda activate T2V-diff
+conda activate AT-diff
 ```
 ## Data Preparation
 2. Prepare Data in the following format
 ```
     ├── data 
-    |   ├── train # Training  
-    |   |   ├── TH              # thermal images 
-    |   |   └── VIS             # visible images
+    |   ├── train # Training  images
     |   └── test  # Testing
-    |       ├── TH              # thermal images 
+    |       ├── at             # turbulence images 
 ```
 ## Training and Testing
 3 Run following commands to train and test 
 ```
 For training:
 export PYTHONPATH=$PYTHONPATH:$(pwd)
-CUDA_VISIBLE_DEVICES="0" NCCL_P2P_DISABLE=1  torchrun --nproc_per_node=1 --master_port=4326 scripts/T2V_train.py 
+CUDA_VISIBLE_DEVICES="0" NCCL_P2P_DISABLE=1  torchrun --nproc_per_node=1 --master_port=4326 scripts/AT_train.py 
 
 For testing:
 export PYTHONPATH=$PYTHONPATH:$(pwd)
-CUDA_VISIBLE_DEVICES="0" NCCL_P2P_DISABLE=1  torchrun --nproc_per_node=1 --master_port=4326 scripts/T2V_test.py --weights /pathtoweights/ --data_dir /pathtodata/
+CUDA_VISIBLE_DEVICES="0" NCCL_P2P_DISABLE=1  torchrun --nproc_per_node=1 --master_port=4326 scripts/AT_test.py --weights /pathtoweights/ --data_dir /pathtodata/
 ```
 4. If you use our work, please use the following citation
 ```
-@article{nair2022t2v,
-  title={T2V-DDPM: Thermal to Visible Face Translation using Denoising Diffusion Probabilistic Models},
-  author={Nair, Nithin Gopalakrishnan and Patel, Vishal M},
-  journal={arXiv preprint arXiv:2209.08814},
-  year={2022}
+@inproceedings{nair2023ddpm,
+  title={At-ddpm: Restoring faces degraded by atmospheric turbulence using denoising diffusion probabilistic models},
+  author={Nair, Nithin Gopalakrishnan and Mei, Kangfu and Patel, Vishal M},
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+  pages={3434--3443},
+  year={2023}
 }
 ```
 

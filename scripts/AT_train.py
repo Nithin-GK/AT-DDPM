@@ -39,15 +39,13 @@ def main(run):
     if(dist.get_rank()==0):
         logger.log("creating data loader...")
     
-    data_dir1=os.path.join(args.data_dir,'TH/')
     gt_dir=os.path.join(args.data_dir,'VIS/')
 
     val_data = DataLoader(ValData(args.test_dir), batch_size=1, shuffle=False, num_workers=1)  #load_superres_dataval()
     data = load_superres_data(
-        data_dir1,
-        gt_dir,
+        args.data_dir,
         args.batch_size,
-        image_size=128,
+        image_size=256,
     )
     if(dist.get_rank()==0):
         logger.log("training...")
@@ -58,6 +56,7 @@ def main(run):
         val_dat=val_data,
         batch_size=args.batch_size,
         microbatch=args.microbatch,
+        ema_rate=args.ema_rate,
         lr=args.lr,
         log_interval=args.log_interval,
         save_interval=args.save_interval,
@@ -71,10 +70,9 @@ def main(run):
     ).run_loop(run)
 
 
-def load_superres_data(data_dir,gt_dirs, batch_size, image_size):
+def load_superres_data(data_dir, batch_size, image_size):
     data = load_data(
         data_dir=data_dir,
-        gt_dir=gt_dirs,
         batch_size=batch_size,
         image_size=image_size,
 
@@ -84,10 +82,11 @@ def load_superres_data(data_dir,gt_dirs, batch_size, image_size):
 
 def create_argparser():
     defaults = dict(
-        data_dir='./data/train/',
-        test_dir='./data/test/TH/',
+        data_dir='/data/train/',
+        test_dir='./data/test/AT/',
         schedule_sampler="uniform",
         lr=1e-5,
+        ema_rate=0.999,
         weight_decay=0.0,
         lr_anneal_steps=0,
         batch_size=16,
@@ -95,7 +94,7 @@ def create_argparser():
         log_interval=200,
         save_interval=500,
         test_interval=1000,
-        resume_checkpoint="./weights/latest.pt",
+        resume_checkpoint="",
         use_fp16=False,
         fp16_scale_growth=1e-3,
     )

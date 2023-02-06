@@ -8,6 +8,7 @@ from torch.nn.parallel.distributed import DistributedDataParallel as DDP
 from torch.optim import AdamW
 import cv2
 import torch.distributed as dist
+from .nn import update_ema
 
 from . import dist_util, logger
 from .fp16_util import MixedPrecisionTrainer
@@ -35,6 +36,7 @@ class TrainLoop:
         val_dat,
         batch_size,
         microbatch,
+        ema_rate,
         lr,
         log_interval,
         save_interval,
@@ -53,7 +55,11 @@ class TrainLoop:
         self.batch_size = batch_size
         self.microbatch = microbatch if microbatch > 0 else batch_size
         self.lr = lr
-
+        self.ema_rate = (
+            [ema_rate]
+            if isinstance(ema_rate, float)
+            else [float(x) for x in ema_rate.split(",")]
+        )       
         self.test_interval = test_interval
         self.log_interval = log_interval
         self.save_interval = save_interval
@@ -80,6 +86,19 @@ class TrainLoop:
         self.opt = AdamW(
             self.mp_trainer.master_params, lr=self.lr, weight_decay=self.weight_decay
         )
+
+        if self.resume_step:
+            self._load_optimizer_state()
+            # Model was resumed, either due to a restart or a checkpoint
+            # being specified at the command line.
+            self.ema_params = [
+                self._load_ema_parameters(rate) for rate in self.ema_rate
+            ]
+        else:
+            self.ema_params = [
+                copy.deepcopy(self.mp_trainer.master_params)
+                for _ in range(len(self.ema_rate))
+            ]  
         if th.cuda.is_available():
             self.use_ddp = True
             self.ddp_model = DDP(
@@ -90,6 +109,14 @@ class TrainLoop:
                 bucket_cap_mb=128,
                 find_unused_parameters=False,
             )
+            self.ema_model = DDP(
+                self.model,
+                device_ids=[dist_util.dev()],
+                output_device=dist_util.dev(),
+                broadcast_buffers=False,
+                bucket_cap_mb=128,
+                find_unused_parameters=False,
+            )        
         else:
             if dist.get_world_size() > 1:
                 logger.warn(
@@ -129,18 +156,25 @@ class TrainLoop:
             if (self.step + 1) % self.save_interval == 0:
                 self.save()
                 
-            if (self.step) % self.test_interval == 0:
+            if (self.step+1) % self.test_interval == 0:
                 self.test(run, phase='train', skip_timesteps=0, iter = i)
 
             self.step += 1
+
+    def _update_ema_distill(self):
+        for rate, _ in zip(self.ema_rate, self.ema_params):
+            update_ema(self.ema_model.parameters(), self.ddp_model.parameters(), rate=rate)
 
 
     def run_step(self, batch, cond):
         self.forward_backward(batch, cond)
         took_step = self.mp_trainer.optimize(self.opt)
-
+        if took_step:
+            self._update_ema_distill()
         self._anneal_lr()
         self.log_step()
+
+
 
     def forward_backward(self, batch, cond):
         self.mp_trainer.zero_grad()
@@ -157,6 +191,7 @@ class TrainLoop:
             compute_losses = functools.partial(
                 self.diffusion.training_losses,
                 self.ddp_model,
+                self.ema_model,
                 micro,
                 t,
                 model_kwargs=micro_cond,

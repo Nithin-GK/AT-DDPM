@@ -1,0 +1,10 @@
+Logging to ./experiments/log/
+creating model...
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_test.py", line 64, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_test.py", line 47, in main
+    val_data = DataLoader(ValData(args.data_dir), batch_size=1, shuffle=False, num_workers=1)  #load_superres_dataval()
+  File "/home/labuser/AT_DDPM/guided_diffusion/valdata.py", line 20, in __init__
+    input_names=os.listdir(self.train_data_dir)
+FileNotFoundError: [Errno 2] No such file or directory: './data/test/AT/'

@@ -36,17 +36,18 @@ def diffusion_test(val_data,model,diffusion, save_dir, run , phase, skip_timeste
                                         else:
                                             model_kwargs[k]= v.to(dist_util.dev())
 
-                                    thermal=model_kwargs['thermal']
+                                    turb=model_kwargs['high_turb']
+                                    # print(turb.shape)
                                     timestep = diffusion.num_timesteps - skip_timesteps
                                     device=next(model.parameters()).device
                                     if(skip_timesteps>0):
-                                        init_image = diffusion.q_sample(thermal, t=th.tensor(timestep, dtype=th.long, device=device))
+                                        init_image = diffusion.q_sample(turb, t=th.tensor(timestep, dtype=th.long, device=device))
                                     else:
                                         init_image=None
 
                                     sample = diffusion.p_sample_loop(
                                         model,
-                                        thermal.shape,
+                                        turb.shape,
                                         clip_denoised=True,
                                         model_kwargs=model_kwargs,
                                         noise=init_image,
@@ -56,10 +57,10 @@ def diffusion_test(val_data,model,diffusion, save_dir, run , phase, skip_timeste
                                     sample = ((sample + 1) * 127.5).clamp(0, 255).to(th.uint8)
                                     sample = sample.permute(0, 2, 3, 1).contiguous().cpu().numpy()
                                     sample = sample
-                                    thermal_image = ((model_kwargs['thermal']+1)* 127.5).clamp(0, 255).to(th.uint8)
-                                    thermal_image = thermal_image.permute(0, 2, 3, 1).contiguous().cpu().numpy()
+                                    turb_image = ((model_kwargs['high_turb']+1)* 127.5).clamp(0, 255).to(th.uint8)
+                                    turb_image = turb_image.permute(0, 2, 3, 1).contiguous().cpu().numpy()
                                     if(dist.get_rank()==0):
-                                            for i in range(thermal.shape[0]):
-                                                img_disp=np.concatenate((thermal_image[i],sample[i]), axis=1)
+                                            for i in range(turb.shape[0]):
+                                                img_disp=np.concatenate((turb_image[i],sample[i]), axis=1)
                                                 img_path =os.path.join(save_fold,img_name[i])
                                                 cv2.imwrite(img_path,img_disp[:,:,::-1])

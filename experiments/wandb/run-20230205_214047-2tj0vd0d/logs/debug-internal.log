@@ -1,0 +1,52 @@
+2023-02-05 21:40:47,373 INFO    StreamThr :585239 [internal.py:wandb_internal():88] W&B internal server running at pid: 585239, started at: 2023-02-05 21:40:47.372526
+2023-02-05 21:40:47,376 DEBUG   HandlerThread:585239 [handler.py:handle_request():139] handle_request: status
+2023-02-05 21:40:47,378 DEBUG   SenderThread:585239 [sender.py:send_request():317] send_request: status
+2023-02-05 21:40:47,380 DEBUG   SenderThread:585239 [sender.py:send():303] send: header
+2023-02-05 21:40:47,381 INFO    WriterThread:585239 [datastore.py:open_for_write():75] open: ./experiments/wandb/run-20230205_214047-2tj0vd0d/run-2tj0vd0d.wandb
+2023-02-05 21:40:47,409 DEBUG   SenderThread:585239 [sender.py:send():303] send: run
+2023-02-05 21:40:47,631 DEBUG   HandlerThread:585239 [handler.py:handle_request():139] handle_request: check_version
+2023-02-05 21:40:47,638 INFO    SenderThread:585239 [dir_watcher.py:__init__():216] watching files in: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files
+2023-02-05 21:40:47,638 INFO    SenderThread:585239 [sender.py:_start_run_threads():928] run started: 2tj0vd0d with start time 1675651247.363775
+2023-02-05 21:40:47,639 DEBUG   SenderThread:585239 [sender.py:send():303] send: summary
+2023-02-05 21:40:47,639 INFO    SenderThread:585239 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2023-02-05 21:40:47,640 DEBUG   SenderThread:585239 [sender.py:send_request():317] send_request: check_version
+2023-02-05 21:40:47,733 DEBUG   HandlerThread:585239 [handler.py:handle_request():139] handle_request: run_start
+2023-02-05 21:40:47,746 DEBUG   HandlerThread:585239 [system_info.py:__init__():31] System info init
+2023-02-05 21:40:47,746 DEBUG   HandlerThread:585239 [system_info.py:__init__():46] System info init done
+2023-02-05 21:40:47,746 INFO    HandlerThread:585239 [system_monitor.py:start():150] Starting system monitor
+2023-02-05 21:40:47,746 INFO    SystemMonitor:585239 [system_monitor.py:_start():116] Starting system asset monitoring threads
+2023-02-05 21:40:47,746 INFO    HandlerThread:585239 [system_monitor.py:probe():168] Collecting system info
+2023-02-05 21:40:47,747 INFO    SystemMonitor:585239 [interfaces.py:start():168] Started cpu
+2023-02-05 21:40:47,747 INFO    SystemMonitor:585239 [interfaces.py:start():168] Started disk
+2023-02-05 21:40:47,748 INFO    SystemMonitor:585239 [interfaces.py:start():168] Started gpu
+2023-02-05 21:40:47,748 INFO    SystemMonitor:585239 [interfaces.py:start():168] Started memory
+2023-02-05 21:40:47,750 INFO    SystemMonitor:585239 [interfaces.py:start():168] Started network
+2023-02-05 21:40:47,797 DEBUG   HandlerThread:585239 [system_info.py:probe():195] Probing system
+2023-02-05 21:40:47,812 DEBUG   HandlerThread:585239 [system_info.py:_probe_git():180] Probing git
+2023-02-05 21:40:47,840 DEBUG   HandlerThread:585239 [system_info.py:_probe_git():188] Probing git done
+2023-02-05 21:40:47,841 DEBUG   HandlerThread:585239 [system_info.py:probe():241] Probing system done
+2023-02-05 21:40:47,841 DEBUG   HandlerThread:585239 [system_monitor.py:probe():177] {'os': 'Linux-5.14.0-1054-oem-x86_64-with-glibc2.35', 'python': '3.9.0', 'heartbeatAt': '2023-02-06T02:40:47.797256', 'startedAt': '2023-02-06T02:40:47.333080', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/labuser/AT_DDPM/scripts/AT_test.py', 'codePath': 'scripts/AT_test.py', 'git': {'remote': 'https://github.com/Nithin-GK/T2V-DDPM.git', 'commit': 'af671ab55b06cd7b4c0f445b03f43c4e5116d826'}, 'email': 'iamnithingk@gmail.com', 'root': '/home/labuser/AT_DDPM', 'host': 'nithingk', 'username': 'labuser', 'executable': '/home/labuser/anaconda3/envs/NERF_env/bin/python', 'cpu_count': 4, 'cpu_count_logical': 8, 'cpu_freq': {'current': 3313.6731250000003, 'min': 1200.0, 'max': 3700.0}, 'cpu_freq_per_core': [{'current': 3666.716, 'min': 1200.0, 'max': 3700.0}, {'current': 1200.005, 'min': 1200.0, 'max': 3700.0}, {'current': 3600.0, 'min': 1200.0, 'max': 3700.0}, {'current': 3600.0, 'min': 1200.0, 'max': 3700.0}, {'current': 3600.0, 'min': 1200.0, 'max': 3700.0}, {'current': 1867.925, 'min': 1200.0, 'max': 3700.0}, {'current': 3600.0, 'min': 1200.0, 'max': 3700.0}, {'current': 1421.815, 'min': 1200.0, 'max': 3700.0}], 'disk': {'total': 911.056697845459, 'used': 705.3078308105469}, 'gpu': 'Quadro RTX 8000', 'gpu_count': 1, 'gpu_devices': [{'name': 'Quadro RTX 8000', 'memory_total': 51539607552}], 'memory': {'total': 31.018619537353516}}
+2023-02-05 21:40:47,841 INFO    HandlerThread:585239 [system_monitor.py:probe():178] Finished collecting system info
+2023-02-05 21:40:47,841 INFO    HandlerThread:585239 [system_monitor.py:probe():181] Publishing system info
+2023-02-05 21:40:47,841 DEBUG   HandlerThread:585239 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-02-05 21:40:47,842 DEBUG   HandlerThread:585239 [system_info.py:_save_pip():67] Saving pip packages done
+2023-02-05 21:40:47,842 DEBUG   HandlerThread:585239 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-02-05 21:40:48,641 INFO    Thread-13 :585239 [dir_watcher.py:_on_file_created():275] file/dir created: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/wandb-summary.json
+2023-02-05 21:40:48,641 INFO    Thread-13 :585239 [dir_watcher.py:_on_file_created():275] file/dir created: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/conda-environment.yaml
+2023-02-05 21:40:48,641 INFO    Thread-13 :585239 [dir_watcher.py:_on_file_created():275] file/dir created: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/requirements.txt
+2023-02-05 21:40:56,385 WARNING StreamThr :585239 [internal.py:is_dead():385] Internal process exiting, parent pid 585161 disappeared
+2023-02-05 21:40:56,385 ERROR   StreamThr :585239 [internal.py:wandb_internal():147] Internal process shutdown.
+2023-02-05 21:40:56,410 INFO    WriterThread:585239 [datastore.py:close():279] close: ./experiments/wandb/run-20230205_214047-2tj0vd0d/run-2tj0vd0d.wandb
+2023-02-05 21:40:56,710 INFO    SenderThread:585239 [sender.py:finish():1331] shutting down sender
+2023-02-05 21:40:56,711 INFO    SenderThread:585239 [dir_watcher.py:finish():362] shutting down directory watcher
+2023-02-05 21:40:57,646 INFO    SenderThread:585239 [dir_watcher.py:finish():392] scan: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files
+2023-02-05 21:40:57,646 INFO    SenderThread:585239 [dir_watcher.py:finish():406] scan save: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/conda-environment.yaml conda-environment.yaml
+2023-02-05 21:40:57,647 INFO    SenderThread:585239 [dir_watcher.py:finish():406] scan save: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/requirements.txt requirements.txt
+2023-02-05 21:40:57,647 INFO    SenderThread:585239 [dir_watcher.py:finish():406] scan save: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/config.yaml config.yaml
+2023-02-05 21:40:57,655 INFO    SenderThread:585239 [dir_watcher.py:finish():406] scan save: ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/wandb-summary.json wandb-summary.json
+2023-02-05 21:40:57,661 INFO    SenderThread:585239 [file_pusher.py:finish():168] shutting down file pusher
+2023-02-05 21:40:57,661 INFO    SenderThread:585239 [file_pusher.py:join():173] waiting for file pusher
+2023-02-05 21:40:57,983 INFO    Thread-16 :585239 [upload_job.py:push():143] Uploaded file ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/requirements.txt
+2023-02-05 21:40:58,006 INFO    Thread-17 :585239 [upload_job.py:push():143] Uploaded file ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/config.yaml
+2023-02-05 21:40:58,028 INFO    Thread-18 :585239 [upload_job.py:push():143] Uploaded file ./experiments/wandb/run-20230205_214047-2tj0vd0d/files/wandb-summary.json
+2023-02-05 21:40:58,735 INFO    MainThread:585239 [internal.py:handle_exit():78] Internal process exited

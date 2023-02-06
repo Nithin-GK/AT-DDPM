@@ -9,11 +9,12 @@ from torch.utils.data import DataLoader, Dataset
 import cv2
 import torch.distributed as dist
 import os
+import imgaug.augmenters as iaa
+from basicsr.data import degradations as degradations
 
 def load_data(
     *,
     data_dir,
-    gt_dir,
     batch_size,
     image_size,
     deterministic=False,
@@ -39,13 +40,12 @@ def load_data(
     """
     if not data_dir:
         raise ValueError("unspecified data directory")
-    img_files =os.listdir(gt_dir)
+    img_files =os.listdir(data_dir)
 
     dataset = ImageDataset(
         image_size,
         img_files,
         data_dir,
-        gt_dir,
         shard=dist.get_rank(),
         num_shards=dist.get_world_size(),
         random_flip=random_flip,
@@ -76,7 +76,7 @@ def _list_image_files_recursively(data_dir):
 
 class RandomCrop(object):
 
-    def __init__(self, crop_size=[256,128]):
+    def __init__(self, crop_size=[256,256]):
         """Set the height and weight before and after cropping"""
         self.crop_size_h  = crop_size[0]
         self.crop_size_w  = crop_size[1]
@@ -89,8 +89,8 @@ class RandomCrop(object):
             inputs = inputs[y_start: y_start + self.crop_size_h, x_start: x_start + self.crop_size_w] 
             target = target[y_start: y_start + self.crop_size_h, x_start: x_start + self.crop_size_w] 
         except:
-            inputs=cv2.resize(inputs,(128,128))
-            target=cv2.resize(target,(128,128))
+            inputs=cv2.resize(inputs,(256,256))
+            target=cv2.resize(target,(256,256))
 
         return inputs,target
 
@@ -100,7 +100,6 @@ class ImageDataset(Dataset):
         resolution,
         image_paths,
         data_dir,
-        gt_paths,
         shard=0,
         num_shards=1,
         random_flip=True,
@@ -109,35 +108,71 @@ class ImageDataset(Dataset):
         self.resolution = resolution
         self.local_images = image_paths[shard:][::num_shards]
         self.random_flip = random_flip
-        self.gt_paths=gt_paths
         self.data_dir=data_dir
 
+        self.deformation = iaa.ElasticTransformation(alpha=100, sigma=[10., 20.])
 
     def __len__(self):
         return len(self.local_images)
 
     def __getitem__(self, idx):
         path = os.path.join(self.data_dir,self.local_images[idx])
-        gt_path = os.path.join(self.gt_paths,self.local_images[idx])
+        gt_path = os.path.join(self.data_dir,self.local_images[idx])
 
         with bf.BlobFile(path, "rb") as f:
-            thermal_image = self.process_and_load_images(path)
+            img_lq = self.process_and_load_images(path)
+        with bf.BlobFile(path, "rb") as f:
+            img_hlq = self.process_and_load_images(path)
         with bf.BlobFile(gt_path, "rb") as f1:
-            visible_image = self.process_and_load_images(gt_path)
+            img_hq = self.process_and_load_images(gt_path)
 
+        if(np.random.uniform()<0.9):
+            img_lq = self.get_degraded_image(img_lq)
+
+        img_lq = np.clip(img_lq,0,1.0)*2-1.0
+        img_hq = np.clip(img_hq,0,1.0)*2-1.0
+        img_hlq =cv2.resize(img_hlq,(64,64),interpolation=cv2.INTER_LINEAR)
+        img_hlq =cv2.resize(img_hlq,(256,256),interpolation=cv2.INTER_LINEAR)
+        img_hlq = np.clip(img_hlq,0,1.0)*2-1.0
+        img_hlq=  np.transpose(img_hlq, [2, 0, 1])
+        img_lq=  np.transpose(img_lq, [2, 0, 1])
+        img_hq= np.transpose(img_hq, [2, 0, 1])
 
         out_dict = {}
-        out_dict["thermal"]=thermal_image
-        out_dict["visible"]=visible_image
-        return visible_image, out_dict
+        out_dict["high_turb"]=img_lq
+        out_dict["low_turb"]=img_hlq
+        out_dict["clean"]=img_hq
+
+        return img_hq, out_dict
         
     def process_and_load_images(self,path):
+
         pil_image = Image.open(path)
         pil_image.load()
         pil_image=pil_image.resize((self.resolution,self.resolution))
         arr=np.array(pil_image).astype(np.float32)
-        arr=arr/127.5-1.0
-        arr = np.transpose(arr, [2, 0, 1])
+        arr=arr/255.0
 
         return arr
+
+    def get_degraded_image(self,lq):
+
+            img_lq = self.deformation(image=lq)
+            kernel = degradations.random_mixed_kernels(
+                            ['iso', 'aniso'],
+                            [0.5,0.5],
+                            int(np.random.uniform(25, 45)) * 2 + 1,
+                            [5, 25],
+                            [5, 25], [-math.pi, math.pi],
+                            noise_range=None)
+            img_lq = cv2.filter2D(img_lq, -1, kernel)
+            # downsample
+            scale = np.random.uniform(1, 4)
+            img_lq = cv2.resize(img_lq, (int(256 // scale), int(256 // scale)), interpolation=cv2.INTER_LINEAR)
+            # noise
+            img_lq = degradations.random_add_gaussian_noise(img_lq, [0,20])
+            # resize to original size
+            img_lq = cv2.resize(img_lq, (256,256), interpolation=cv2.INTER_LINEAR)
+
+            return img_lq
 

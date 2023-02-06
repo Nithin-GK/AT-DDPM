@@ -1,0 +1,23 @@
+Logging to ./experiments/log/
+creating model...
+creating data loader...
+training...
+loading model from checkpoint: ./weights/latest.pt...
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 105, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 52, in main
+    TrainLoop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 74, in __init__
+    self._load_and_sync_parameters()
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 110, in _load_and_sync_parameters
+    dict_load = dist_util.load_state_dict(resume_checkpoint, map_location=dist_util.dev())
+  File "/home/labuser/AT_DDPM/guided_diffusion/dist_util.py", line 64, in load_state_dict
+    return th.load(path, **kwargs)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/serialization.py", line 771, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/serialization.py", line 270, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/serialization.py", line 251, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: './weights/latest.pt'

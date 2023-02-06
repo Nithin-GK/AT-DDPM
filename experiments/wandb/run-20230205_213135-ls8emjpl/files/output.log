@@ -1,0 +1,26 @@
+Logging to ./experiments/log/
+creating model...
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_test.py", line 64, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_test.py", line 48, in main
+    diffusion_test(val_data,model,diffusion, './results/', run , 'test', skip_timesteps=40, iter=0)
+  File "/home/labuser/AT_DDPM/guided_diffusion/test_diff.py", line 47, in diffusion_test
+    sample = diffusion.p_sample_loop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 457, in p_sample_loop
+    for sample in self.p_sample_loop_progressive(
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 509, in p_sample_loop_progressive
+    out = self.p_sample(
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 406, in p_sample
+    out = self.p_mean_variance(
+  File "/home/labuser/AT_DDPM/guided_diffusion/respace.py", line 91, in p_mean_variance
+    return super().p_mean_variance(self._wrap_model(model), *args, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/gaussian_diffusion.py", line 248, in p_mean_variance
+    model_output = model(x, self._scale_timesteps(t), **model_kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/respace.py", line 123, in __call__
+    return self.model(x, new_ts, **kwargs)
+  File "/home/labuser/anaconda3/envs/NERF_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/labuser/AT_DDPM/guided_diffusion/unet.py", line 675, in forward
+    x = th.cat([x, thermal], dim=1)
+TypeError: expected Tensor as element 1 in argument 0, but got NoneType

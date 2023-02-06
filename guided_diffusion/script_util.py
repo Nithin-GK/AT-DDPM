@@ -3,7 +3,7 @@ import inspect
 
 from . import gaussian_diffusion as gd
 from .respace import SpacedDiffusion, space_timesteps
-from .unet import ThermaltoVisible
+from .unet import ATDDPM
 
 
 
@@ -27,7 +27,7 @@ def model_and_diffusion_defaults():
     Defaults for image training.
     """
     res = dict(
-        image_size=128,
+        image_size=256,
         num_channels=192,
         num_res_blocks=2,
         num_heads=4,
@@ -50,8 +50,8 @@ def model_and_diffusion_defaults():
 
 def sr_model_and_diffusion_defaults():
     res = model_and_diffusion_defaults()
-    res["large_size"] = 128
-    res["small_size"] = 128
+    res["large_size"] = 256
+    res["small_size"] = 256
     arg_names = inspect.getfullargspec(sr_create_model_and_diffusion)[0]
     for k in res.copy().keys():
         if k not in arg_names:
@@ -145,7 +145,7 @@ def sr_create_model(
     for res in attention_resolutions.split(","):
         attention_ds.append(large_size // int(res))
 
-    return ThermaltoVisible(
+    return ATDDPM(
         image_size=large_size,
         in_channels=6,
         model_channels=num_channels,

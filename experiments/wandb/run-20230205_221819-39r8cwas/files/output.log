@@ -1,0 +1,17 @@
+Logging to ./experiments/log/
+creating model...
+creating data loader...
+training...
+  0%|                                                                                                                                | 0/100000 [00:01<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 105, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 52, in main
+    TrainLoop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 125, in run_loop
+    self.run_step(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 144, in run_step
+    self.forward_backward(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 168, in forward_backward
+    self.ema_model,
+AttributeError: 'TrainLoop' object has no attribute 'ema_model'

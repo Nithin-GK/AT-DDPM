@@ -1,0 +1,17 @@
+Logging to ./experiments/log/
+creating model...
+creating data loader...
+training...
+  0%|                                                                                                                                | 0/100000 [00:06<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 107, in <module>
+    main(run)
+  File "/home/labuser/AT_DDPM/scripts/AT_train.py", line 52, in main
+    TrainLoop(
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 134, in run_loop
+    self.run_step(batch, cond)
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 156, in run_step
+    self._update_ema_distill()
+  File "/home/labuser/AT_DDPM/guided_diffusion/train_util.py", line 148, in _update_ema_distill
+    for rate, params in zip(self.ema_rate, self.ema_params):
+AttributeError: 'TrainLoop' object has no attribute 'ema_params'
