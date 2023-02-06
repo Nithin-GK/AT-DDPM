@@ -41,7 +41,12 @@ For testing:
 export PYTHONPATH=$PYTHONPATH:$(pwd)
 CUDA_VISIBLE_DEVICES="0" NCCL_P2P_DISABLE=1  torchrun --nproc_per_node=1 --master_port=4326 scripts/AT_test.py --weights /pathtoweights/ --data_dir /pathtodata/
 ```
-4. If you use our work, please use the following citation
+## Pretrained models
+4 Please download pretrained models from the following link
+```
+https://www.dropbox.com/sh/1cvq055t7umbmkb/AAA4hR0Ah06SJoj2wvn_tS1wa?dl=0
+```
+5. If you use our work, please use the following citation
 ```
 @inproceedings{nair2023ddpm,
   title={At-ddpm: Restoring faces degraded by atmospheric turbulence using denoising diffusion probabilistic models},
