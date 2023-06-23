@@ -11,7 +11,7 @@ from . import dist_util
 import numpy as np
 import os
 from tqdm import tqdm
-def diffusion_test(val_data,model,diffusion, save_dir, run , phase, skip_timesteps=0, iter=0):
+def diffusion_test(val_data,model,diffusion, save_dir, phase, skip_timesteps=0, iter=0):
                
                     model.eval()
                     if(dist.get_rank()==0):
