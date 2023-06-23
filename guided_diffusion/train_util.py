@@ -140,7 +140,7 @@ class TrainLoop:
 
 
     def test(self, run, phase='test',skip_timesteps=0,iter=0):
-        diffusion_test( self.val_data, self.model,self.diffusion,'./results', run, phase, skip_timesteps,iter )
+        diffusion_test( self.val_data, self.model,self.diffusion,'./results', phase, skip_timesteps,iter )
 
 
     def run_loop(self, run):
