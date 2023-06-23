@@ -5,7 +5,7 @@ Train a super-resolution model.
 import argparse
 
 import torch.nn.functional as F
-from core.wandb_logger import WandbLogger
+#from core.wandb_logger import WandbLogger
 from guided_diffusion import dist_util, logger
 from guided_diffusion.image_datasets import load_data
 from guided_diffusion.resample import create_named_schedule_sampler
@@ -22,7 +22,7 @@ import os
 import torch.distributed as dist
 import clip
 from guided_diffusion.test_diff import diffusion_test
-def main(run):
+def main():
     args = create_argparser().parse_args()
     os.environ["TORCH_DISTRIBUTED_DEBUG"] = "INFO"  # set to DETAIL for runtime logging.
 
@@ -45,7 +45,7 @@ def main(run):
     model.eval()
 
     val_data = DataLoader(ValData(args.data_dir), batch_size=1, shuffle=False, num_workers=1)  #load_superres_dataval()
-    diffusion_test(val_data,model,diffusion, './results/', run , 'test', skip_timesteps=40, iter=0)
+    diffusion_test(val_data,model,diffusion, './results/' , 'test', skip_timesteps=40, iter=0)
 
 
 def create_argparser():
@@ -60,5 +60,5 @@ def create_argparser():
     add_dict_to_argparser(parser, defaults)
     return parser
 if __name__ == "__main__":
-    run=WandbLogger()
-    main(run)
+   # run=WandbLogger()
+    main()
